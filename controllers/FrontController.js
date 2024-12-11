@@ -36,12 +36,13 @@ class FrontController {
             console.log(error)
         }
     }
-    static userinsert = async(req,res)=>{
+    static userinsert = async (req, res) => {
         try {
-            console.log("insert")
+            console.log(req.body)
         } catch (error) {
             console.log(error)
         }
     }
+
 }
 module.exports = FrontController

@@ -9,6 +9,7 @@ route.get('/about', FrontController.about)
 route.get('/contact', FrontController.contact)
 route.get('/', FrontController.login)
 route.get('/register', FrontController.register)
+
 //user insert
 route.post('/userinsert',FrontController.userinsert)
 
