@@ -39,29 +39,30 @@ class FrontController {
     }
     static userinsert = async (req, res) => {
         try {
+            console.log(req.files.image)
             // console.log(req.body)
-            const { name, email, password, confirmpassword } = req.body
-            if (!name || !email || !password || !confirmpassword) {
-                req.flash("error", "All Fields are Required.");
-                return res.redirect('/register');
-            }
-            const isEmail = await UserModel.findOne({ email });
-            if (isEmail) {
-                req.flash("error", "Email Already Exists.");
-                return res.redirect("/register")
-            }
-            if (password != confirmpassword) {
-                req.flash("error", "Password does not match.");
-                return res.redirect('/register');
-            }
-            const hashpassword = await bcrypt.hash(password,10)
-            const data = await UserModel.create({
-                name,
-                email,
-                password:hashpassword
-            })
-            req.flash("success", "Register Successfully ! please login here");
-            res.redirect('/')
+            // const { name, email, password, confirmpassword } = req.body
+            // if (!name || !email || !password || !confirmpassword) {
+            //     req.flash("error", "All Fields are Required.");
+            //     return res.redirect('/register');
+            // }
+            // const isEmail = await UserModel.findOne({ email });
+            // if (isEmail) {
+            //     req.flash("error", "Email Already Exists.");
+            //     return res.redirect("/register")
+            // }
+            // if (password != confirmpassword) {
+            //     req.flash("error", "Password does not match.");
+            //     return res.redirect('/register');
+            // }
+            // const hashpassword = await bcrypt.hash(password,10)
+            // const data = await UserModel.create({
+            //     name,
+            //     email,
+            //     password:hashpassword
+            // })
+            // req.flash("success", "Register Successfully ! please login here");
+            // res.redirect('/')
 
         } catch (error) {
             console.log(error)

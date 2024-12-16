@@ -4,7 +4,10 @@ const port = 3000
 const web = require('./routes/web')
 const connectDb = require('./data Base/connectDb')
 
+const fileUpload = require('express-fileupload')
 
+//image upload
+app.use(fileUpload())
 
 
 //view ejs set
