@@ -7,7 +7,7 @@ const connectDb = require('./data Base/connectDb')
 const fileUpload = require('express-fileupload')
 
 //image upload
-app.use(fileUpload())
+app.use(fileUpload({useTempFiles : true}))
 
 
 //view ejs set
