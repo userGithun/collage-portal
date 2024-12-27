@@ -1,6 +1,7 @@
 const UserModel = require('../models/user')
 const bcrypt = require('bcrypt')
 const cloudinary = require('cloudinary')
+const jwt = require('jsonwebtoken')
 
 // Configuration
 cloudinary.config({
@@ -11,29 +12,32 @@ cloudinary.config({
 
 class FrontController {
     static home = async (req, res) => {
-        try {
-            res.render("home")
+        try { 
+            const {name ,image}=req.udata
+            res.render("home",{n:name,i:image})
         } catch (error) {
             console.log(error)
         }
     }
     static about = async (req, res) => {
         try {
-            res.render("about")
+            const {name ,image}=req.udata
+            res.render("about",{n:name,i:image})
         } catch (error) {
             console.log(error)
         }
     }
     static contact = async (req, res) => {
         try {
-            res.render("contact")
+            const {name ,image}=req.udata
+            res.render("contact",{n:name,i:image})
         } catch (error) {
             console.log(error)
         }
     }
     static login = async (req, res) => {
         try {
-            res.render("login", { msg: req.flash('success') })
+            res.render("login", { msg: req.flash('success'), msg1: req.flash('error') })
         } catch (error) {
             console.log(error)
         }
@@ -45,6 +49,7 @@ class FrontController {
             console.log(error)
         }
     }
+    //userinsert
     static userinsert = async (req, res) => {
         try {
             // console.log(req.files.image)
@@ -90,6 +95,45 @@ class FrontController {
             console.log(error)
         }
     }
+    //verifyLogin
+    static verifyLogin = async (req, res) => {
+        try {
+            //console.log(req.body)
+            const { email, password } = req.body
 
+            const inUser = await UserModel.findOne({ email });
+            if (!inUser) {
+                req.flash('error', "You are not a register user")
+                return res.redirect('/')
+            } else {
+                const isMatch = await bcrypt.compare(password, inUser.password)
+                console.log(isMatch)
+
+                if (isMatch) {
+
+                    const token = jwt.sign({ Id: inUser.id }, 'khuch bhii');
+                    // console.log(token)
+                    res.cookie('token',token)
+
+
+                    return res.redirect('/home')
+                } else {
+                    req.flash('error', "Email or password does't match.")
+                    res.redirect('/')
+                }
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+    //logout
+    static logout = async (req, res) => {
+        try {
+            res.redirect('/')
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 module.exports = FrontController

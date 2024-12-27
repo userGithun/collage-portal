@@ -3,12 +3,14 @@ const app = express()
 const port = 3000
 const web = require('./routes/web')
 const connectDb = require('./data Base/connectDb')
+var cookieParser = require('cookie-parser')
 
 const fileUpload = require('express-fileupload')
 
 //image upload
 app.use(fileUpload({useTempFiles : true}))
-
+//token get cookie
+app.use(cookieParser())
 
 //view ejs set
 app.set('view engine', 'ejs')
