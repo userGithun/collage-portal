@@ -12,25 +12,25 @@ cloudinary.config({
 
 class FrontController {
     static home = async (req, res) => {
-        try { 
-            const {name ,image}=req.udata
-            res.render("home",{n:name,i:image})
+        try {
+            const { name, image, email } = req.udata
+            res.render("home", { n: name, i: image, e: email })
         } catch (error) {
             console.log(error)
         }
     }
     static about = async (req, res) => {
         try {
-            const {name ,image}=req.udata
-            res.render("about",{n:name,i:image})
+            const { name, image } = req.udata
+            res.render("about", { n: name, i: image })
         } catch (error) {
             console.log(error)
         }
     }
     static contact = async (req, res) => {
         try {
-            const {name ,image}=req.udata
-            res.render("contact",{n:name,i:image})
+            const { name, image } = req.udata
+            res.render("contact", { n: name, i: image })
         } catch (error) {
             console.log(error)
         }
@@ -110,13 +110,26 @@ class FrontController {
                 console.log(isMatch)
 
                 if (isMatch) {
+                    //token
+                    if (inUser.role == 'admin') {
 
-                    const token = jwt.sign({ Id: inUser.id }, 'khuch bhii');
-                    // console.log(token)
-                    res.cookie('token',token)
+                        const token = jwt.sign({ Id: inUser.id }, 'khuch bhii');
+                        // console.log(token)
+                        res.cookie('token', token)
+
+                        return res.redirect('/admin/dashboard')
+                    }
+                    if (inUser.role == 'student') {
+
+                        const token = jwt.sign({ Id: inUser.id }, 'khuch bhii');
+                        // console.log(token)
+                        res.cookie('token', token)
+
+                        return res.redirect('/home')
+                    }
 
 
-                    return res.redirect('/home')
+
                 } else {
                     req.flash('error', "Email or password does't match.")
                     res.redirect('/')
@@ -130,10 +143,97 @@ class FrontController {
     //logout
     static logout = async (req, res) => {
         try {
+            res.clearCookie('token');
             res.redirect('/')
         } catch (error) {
             console.log(error)
         }
     }
+    //profile
+    static profile = async (req, res) => {
+        try {
+            const { name, image, email } = req.udata
+            res.render("profile", { n: name, i: image, e: email, message: req.flash('error') })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    static changePassword = async (req, res) => {
+        try {
+            const { id } = req.udata;
+            // console.log(req.body);
+            const { op, np, cp } = req.body;
+            if (op && np && cp) {
+                const user = await UserModel.findById(id);
+                const isMatched = await bcrypt.compare(op, user.password);
+                //console.log(isMatched)
+                if (!isMatched) {
+                    req.flash("error", "Current password is incorrect ");
+                    res.redirect("/profile");
+                } else {
+                    if (np != cp) {
+                        req.flash("error", "Password does not match");
+                        res.redirect("/profile");
+                    } else {
+                        const newHashPassword = await bcrypt.hash(np, 10);
+                        await UserModel.findByIdAndUpdate(id, {
+                            password: newHashPassword,
+                        });
+                        req.flash("success", "Password Updated successfully ");
+                        res.redirect("/");
+                    }
+                }
+            } else {
+                req.flash("error", "ALL fields are required ");
+                res.redirect("/profile");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    };
+
+    static updateProfile = async (req, res) => {
+        try {
+            const { id } = req.udata;
+            const { name, email } = req.body;
+            if (req.files) {
+                const user = await UserModel.findById(id);
+                const imageID = user.image.public_id;
+                // console.log(imageID);
+
+                //deleting image from Cloudinary
+                await cloudinary.uploader.destroy(imageID);
+                //new image update
+                const imagefile = req.files.image;
+                const imageupload = await cloudinary.uploader.upload(
+                    imagefile.tempFilePath,
+                    {
+                        folder: "userprofile",
+                    }
+                );
+                var data = {
+                    name: name,
+                    email: email,
+                    image: {
+                        public_id: imageupload.public_id,
+                        url: imageupload.secure_url,
+                    },
+                };
+            } else {
+                var data = {
+                    name: name,
+                    email: email,
+                };
+            }
+            await UserModel.findByIdAndUpdate(id, data);
+            req.flash("success", "Update Profile successfully");
+            res.redirect("/profile");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
 }
 module.exports = FrontController
