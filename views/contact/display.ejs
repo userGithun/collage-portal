@@ -1,0 +1,54 @@
+<%- include('../header.ejs') %>
+
+    <h1 class="text-center mt-5">Contact Display</h1>
+    <div class="container">
+
+        <table class="table table-bordered text-center mt-5">
+            <thead>
+                <tr>
+                    <th colspan="6">Contact Display</th>
+                </tr>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Message</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% c.forEach((item,index)=>{%>
+                    <tr>
+                        <td>
+                            <%= index+1 %>
+                        </td>
+                        <td>
+                            <%= item.name %>
+                        </td>
+
+                        <td>
+                            <%= item.email %>
+                        </td>
+
+                        <td>
+                            <%= item.phone %>
+                        </td>
+
+                        <td>
+                            <%= item.message %>
+                        </td>
+                        <td>
+                            <a href="/deleteContact/<%= item.id %>" class="btn btn-danger">Delete</a>
+                        </td>
+
+                    </tr>
+                    <%})%>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <%- include('../footer.ejs') %>
