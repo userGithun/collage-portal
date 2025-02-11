@@ -131,7 +131,7 @@ class FrontController {
           text: "heelo", // plain text body
           html: "<p>Hii " +
             name +
-            ',Please click here to <a href="http://localhost:3000/register/verify?id=' +
+            ',Please click here to <a href="https://collage-portal-z8k7.onrender.com/register/verify?id=' +
             user_id +
             '">Verify</a>Your mail</p>.',
     
@@ -337,7 +337,7 @@ class FrontController {
             to: email,                    // list of receivers
             subject: "Reset Password",    // Subject line
             text: "heelo",                // plain text body
-            html: "<p>Hii " + name + ',Please click here to <a href="http://localhost:3000/reset-password?token=' + token + '">Reset</a>Your Password.',
+            html: "<p>Hii " + name + ',Please click here to <a href="https://collage-portal-z8k7.onrender.com/reset-password?token=' + token + '">Reset</a>Your Password.',
 
         });
     };
