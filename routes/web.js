@@ -41,7 +41,6 @@ route.post('/course_insert', checkAuth, CoureController.createCourse)
 
 route.get('/coursedisplay', checkAuth, CoureController.coursedisplay)
 route.get('/viewCourse/:id', checkAuth, CoureController.viewCourse)
-route.get('/deleteCourse/:id', checkAuth, CoureController.deleteCourse)
 route.get('/editCourse/:id', checkAuth, CoureController.editCourse)
 route.post('/courseUpdate/:id', checkAuth, CoureController.courseUpdate)
 

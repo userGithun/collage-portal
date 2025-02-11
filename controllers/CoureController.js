@@ -84,19 +84,7 @@ class CoureController {
             console.log(error)
         }
     }
-    static deleteCourse = async (req, res) => {
-        try {
-            const { name, image } = req.udata
-            const id = req.params.id
-            // console.log(id)
-
-            const course = await CouresModel.findByIdAndDelete(id)
-            // console.log(course)
-            res.redirect('/courseDisplay')
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    
     static sendEmail = async (name, email, course) => {
         //   console.log(name,email,course)
           // connenct with the smtp server
