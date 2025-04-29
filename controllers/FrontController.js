@@ -98,9 +98,9 @@ class FrontController {
 
             if (data) {
 
-                this.sendVerifymail(name, email, data.id)
-                req.flash('error', 'Your Register Success, Plz verify mail')
-                res.redirect('/register')
+                // this.sendVerifymail(name, email, data.id)
+                // req.flash('error', 'Your Register Success, Plz verify mail')
+                // res.redirect('/register')
             } else {
                 req.flash('error', 'not found')
                 req.redirect('/register')
